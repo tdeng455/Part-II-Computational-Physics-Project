@@ -1,7 +1,11 @@
+"""onsager.py
+Plots the analytic solution for the mean magnetisation of a 2D Ising model with no external field
+"""
+
 import numpy as np
 import matplotlib.pylab as plt
 
-T = np.linspace(0.1,4,100)
+T = np.linspace(0.1,4,500)
 T_crit = 2/np.log(1+np.sqrt(2))
 
 def Mag_pos(x):

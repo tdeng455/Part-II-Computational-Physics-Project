@@ -1,9 +1,11 @@
+"""initial.py
+Creates a lattice and defines useful functions such as calculating neighbouring sites, 
+calculating the sum of neighbouring spin sites and computes the total magnetisation of the lattice
+"""
+
 import numpy as np
 rng = np.random.default_rng()
 import matplotlib.pylab as plt
-
-"""Creates a lattice and defines useful functions such as calculating neighbouring sites, 
-calculating the sum of neighbouring spin sites and computes the total magnetisation of the lattice"""
 
 # Creates the lattice
 def create_lattice(width,type=0):
