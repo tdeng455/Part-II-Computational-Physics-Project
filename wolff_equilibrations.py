@@ -4,15 +4,17 @@
 
 import numpy as np
 rng = np.random.default_rng()
-import matplotlib.pylab as plt
 import functions.initial as initial
 import functions.cluster as cluster
 
-def plot_equilibration_MH(width, betaJ, n_steps, ax):   
+def equilibration_wolff(width, betaJ, n_steps, filename):   
+    
     p_add = 1-np.exp(-2*betaJ)
     lattice_types = [(0, "Random uniform"), (1, "All up"), (-1, "All down"), (2, "Anti-aligned")]
+    magnetisation_data = []
     for i, (lattice_type, name) in enumerate(lattice_types):
         lattice = initial.create_lattice(width, type=lattice_type)
+        print(i)
 
         # Measurement stage
         N = width**2
@@ -20,19 +22,17 @@ def plot_equilibration_MH(width, betaJ, n_steps, ax):
         magnetisations = [mag]
         for j in range(n_steps):
             cluster.wolff_flip1(lattice, p_add)
-            if j in np.arange(n_steps)*N:
+            if j in np.arange(n_steps)*10:
                 mag = np.abs(initial.magnetisation(lattice))
                 magnetisations.append(mag)
 
-        ax.plot(range(n_steps+1), magnetisations, label=name)
+        magnetisation_data.append([name, magnetisations])
 
-    ax.set_xlabel("Number of Sweeps")
-    ax.set_ylabel("Absolute Magnetisation, |M|")
-    ax.set_title(r"Wolff Equilibration for $\beta$ = {}".format(betaJ))
-    ax.legend()
+    np.save(filename, np.array(magnetisation_data, dtype=object))
+    #ax.set_xlabel("Number of Sweeps")
+    #ax.set_ylabel("Absolute Magnetisation, |M|")
+    #ax.set_title(r"Wolff Equilibration for $\beta$ = {}".format(betaJ))
+    #ax.legend()
 
-fig, axs = plt.subplots(1,2, figsize=(14,5))
-plot_equilibration_MH(50,0.33,200,axs[0])
-plot_equilibration_MH(50,1,200,axs[1])
-plt.savefig('wolff_equilibration_temps.png',dpi='figure')
-plt.show()
+equilibration_wolff(40,0.33,1000, 'wolff_equilibration_data_0.33')
+equilibration_wolff(40,1,1000, 'wolff_equilibration_data_1.00')

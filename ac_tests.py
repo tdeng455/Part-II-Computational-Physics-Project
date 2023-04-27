@@ -6,7 +6,6 @@ import matplotlib.pylab as plt
 import functions.initial as initial
 import functions.metropolis as metropolis
 import functions.cluster as cluster
-import functions.acfast as acfast
 import time
 
 temps = np.arange(1.5,3.5,0.5)  # temperatures to simulate
@@ -61,7 +60,7 @@ MH_autocorr_times = []
 for mags in mags_MH:
     print('(slower?) start')
     start_time = time.time()
-    MH_autocorr_times.append(initial.autocorrelation_time(mags,len(mags)))
+    MH_autocorr_times.append(initial.autocorrelation_time_2(mags,len(mags)))
     end_time = time.time()
     print('(slower?) end, t = ' + str(end_time - start_time))
 
@@ -69,7 +68,7 @@ MH_autocorr_times_fast = []
 for mags in mags_MH:
     print('(faster?) start')
     start_time1 = time.time()
-    MH_autocorr_times_fast.append(acfast.autocorrelation_time(mags))
+    MH_autocorr_times_fast.append(initial.autocorrelation_time(mags))
     end_time1 = time.time()
     print('(faster?) end, t = ' + str(end_time1 - start_time1))
 
@@ -80,7 +79,7 @@ for mags in mags_MH:
 #wolff_autocorr_times = []
 #for mags in mags_wolff:
 #    print(len(mags))
-#    wolff_autocorr_times.append(initial.autocorrelation_time(mags,int(wolff_n_steps)))
+#    wolff_autocorr_times.append(initial.autocorrelation_time(mags))
 
 #save
 #wolff_autocorr_dat = [temps,wolff_autocorr_times]

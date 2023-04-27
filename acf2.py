@@ -3,7 +3,6 @@
 import numpy as np
 rng = np.random.default_rng()
 import matplotlib.pylab as plt
-import functions.acfast as acfast
 import functions.initial as initial
 import functions.metropolis as metropolis
 import functions.cluster as cluster
@@ -40,8 +39,8 @@ for step in range(wolff_n_steps):
     if step%100 == 0:
         print(step)
 
-ACF_MH = acfast.autocorrelation(mag_MH, t_max=5000)
-ACF_wolff = acfast.autocorrelation(mag_wolff, t_max=5000)
+ACF_MH = initial.autocorrelation(mag_MH)
+ACF_wolff = initial.autocorrelation(mag_wolff)
 
 #data = [ACF_MH,ACF_wolff]
 #np.save('acf_samemoves2', data)

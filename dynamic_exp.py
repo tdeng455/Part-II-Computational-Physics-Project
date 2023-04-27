@@ -6,7 +6,6 @@ import matplotlib.pylab as plt
 import functions.initial as initial
 import functions.metropolis as metropolis
 import functions.cluster as cluster
-import functions.acfast as acfast
 
 def compute_dynamic_exponent_MH(w_values, betaJ, burn_in, n_steps):
     
@@ -22,7 +21,7 @@ def compute_dynamic_exponent_MH(w_values, betaJ, burn_in, n_steps):
             if i%100 == 0:
                 mags.append(initial.magnetisation(lattice))
                 print(i)
-        autotime_L = acfast.autocorrelation_time(mags,len(mags))
+        autotime_L = initial.autocorrelation_time(mags)
         autotimes.append(autotime_L)
     print(autotimes)
 
@@ -47,7 +46,7 @@ def compute_dynamic_exponent_wolff(w_values, betaJ, burn_in, n_steps):
             cluster.wolff_flip1(lattice, p_add)
             if i%1000 == 0:
                 print(i)
-        autotime_L = acfast.autocorrelation_time(mags,len(mags))
+        autotime_L = initial.autocorrelation_time(mags)
         autotimes.append(autotime_L)
     print(autotimes)
 

@@ -30,16 +30,6 @@ def n_MH_moves(lattice, width, betaJ, n):
     for i in range(n):
         MH_flip(lattice, width, betaJ)
 
-def evolve_and_plot(lattice, betaJ, plot_times):
-    '''Evolves the lattice using MH algorithm and plots the lattice at different 'time steps'.'''
-    fig, ax = plt.subplots(1, len(plot_times), figsize=(12,4))
-    
-    for t in range(plot_times[-1]+1):
-        MH_flip(lattice, len(lattice), betaJ)
-        if t in plot_times:
-            initial.plot_lattice(lattice, ax[plot_times.index(t)], "t = {}".format(t))
-    plt.show()
-
 def compute_M_avg(lattice, width, betaJ, avg_times):
     """Evolves the lattice using the Metropolis-Hastings algorithm and returns the average 
     absolute magnetisation per site computed using different time steps.
@@ -51,3 +41,14 @@ def compute_M_avg(lattice, width, betaJ, avg_times):
             m.append(abs(initial.magnetisation(lattice)))
     m_avg = np.mean(m)
     return m_avg
+
+def evolve_and_plot_MH(lattice, width, betaJ, plot_times):
+    """Evolves the lattice using MH algorithm and plots the lattice at different 'time steps'."""
+    fig, ax = plt.subplots(1, len(plot_times), figsize=(16,6))
+    
+    for t in range(plot_times[-1]+1):
+        MH_flip(lattice, width, betaJ)
+        if t in plot_times:
+            initial.plot_lattice(lattice, ax[plot_times.index(t)], "t = {}".format(t))
+            ax[plot_times.index(t)].set_xlabel("sweeps = {}".format(t/width**2))
+    plt.show()

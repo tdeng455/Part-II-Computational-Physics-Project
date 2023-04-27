@@ -53,21 +53,16 @@ def compute_M_avg_wolff(lattice, p_add, avg_times):
     m_avg = np.mean(m)
     return m_avg
 
-#########################################################################################################################
-
-# REDEFINING EVOLVE AND PLOT FUNCTION FOR CHOICE OF BOTH ALGORITHMS
-def evolve_and_plot(lattice, betaJ, p_add, plot_times, wolff=True):
+def evolve_and_plot_wolff(lattice, p_add, plot_times):
     """Evolves the lattice using MH or Wolff algorithm and plots the lattice at different 'time steps'."""
     fig, ax = plt.subplots(1, len(plot_times), figsize=(12,4))
-    
-    if wolff == True:
-        for t in range(plot_times[-1]+1):
-            wolff_flip1(lattice, p_add)
-            if t in plot_times:
-                initial.plot_lattice(lattice, ax[plot_times.index(t)], "t = {}".format(t))
-    else:    
-        for t in range(plot_times[-1]+1):
-            metropolis.MH_flip(lattice, len(lattice), betaJ)
-            if t in plot_times:
-                initial.plot_lattice(lattice, ax[plot_times.index(t)], "t = {}".format(t))
+
+    sweeps = 0
+    flip_count = 0
+    for t in range(plot_times[-1]+1):
+        flip_count += wolff_flip1(lattice, p_add)
+        if t in plot_times:
+            sweeps = flip_count/np.size(lattice)
+            initial.plot_lattice(lattice, ax[plot_times.index(t)], "t = {}".format(t))
+            ax[plot_times.index(t)].set_xlabel("sweeps = {}".format(sweeps))
     plt.show()
