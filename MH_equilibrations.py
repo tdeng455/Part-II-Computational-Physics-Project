@@ -13,7 +13,7 @@ def equilibration_MH(width, betaJ, n_sweeps, filename):
     magnetisation_data = []
     for i, (lattice_type, name) in enumerate(lattice_types):
         lattice = initial.create_lattice(width, type=lattice_type)
-        print(i)
+        print(name)
         
         #Measurement
         N = width**2
@@ -26,13 +26,12 @@ def equilibration_MH(width, betaJ, n_sweeps, filename):
                 magnetisations.append(mag)
         
         magnetisation_data.append([name, magnetisations])
-        #ax.plot(range(n_sweeps+1), magnetisations, label=name)
 
     np.save(filename, np.array(magnetisation_data, dtype=object))
-    #ax.set_xlabel("Number of Sweeps")
-    #ax.set_ylabel("Absolute Magnetisation, |M|")
-    #ax.set_title(r"Metropolis-Hastings Equilibration for $\beta$ = {}".format(betaJ))
-    #ax.legend()
 
+equilibration_MH(40,0.01,200, 'MH_equilibration_data_0.01')
+equilibration_MH(40,0.2,200, 'MH_equilibration_data_0.20')
 equilibration_MH(40,0.33,200, 'MH_equilibration_data_0.33')
-equilibration_MH(40,1,200, 'MH_equilibration_data_1.00')
+equilibration_MH(40,0.44,200, 'MH_equilibration_data_0.44')
+equilibration_MH(40,0.5,200, 'MH_equilibration_data_0.50')
+equilibration_MH(40,1.00,200, 'MH_equilibration_data_1.00')

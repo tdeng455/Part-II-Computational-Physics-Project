@@ -1,4 +1,5 @@
-"""initial.py
+"""
+initial.py
 Creates a lattice and defines useful functions such as calculating neighbouring sites, 
 calculating the sum of neighbouring spin sites and computes the total magnetisation of the lattice
 """
@@ -10,11 +11,12 @@ from statsmodels.tsa.stattools import acf
 import types
 
 def create_lattice(width,type=0):
-    """Creates a lattice array of three types
+    """
+    Creates a lattice array of four types
     
     Type 1: all spins +1
     Type -1: all spins -1
-    Type 0: a random lattice of spins +/-
+    Type 0: a random lattice of spins +/- 1
     Type 2: anti-aligned lattice
     """
     lattice = np.array((width,width))   
@@ -30,7 +32,7 @@ def create_lattice(width,type=0):
             else:
                 return np.tile([[1,-1],[-1,1]],((width+1)//2,(width+1)//2))[:width,:width]
     else:
-        raise ValueError("Invalid type. Type should be 0, 1, or -1.")
+        raise ValueError('Invalid type. Type should be 0, 1, or -1.')
 
 def plot_lattice(lattice,ax,title):
     """Plots the lattice with black as +1, and white as -1"""
@@ -42,7 +44,10 @@ def plot_lattice(lattice,ax,title):
     ax.set_xticks([])
 
 def get_neighbouring_sites(i,j,width):
-    """Returns the coordinates of the neighbouring sites of a given coordinate with periodic boundrary conditions"""
+    """
+    Returns the coordinates of the neighbouring sites of a given 
+    coordinate with periodic boundrary conditions
+    """
     neighbours = [((i-1)%width, j), ((i+1)%width, j), (i, (j-1)%width), (i, (j+1)%width)]
     return neighbours
 
@@ -57,12 +62,13 @@ def magnetisation(lattice):
     Mag = lattice.sum()/np.size(lattice)
     return Mag
 
-"""Defining autocorrelation function and autocorrelation times 
-   using statsmodels library
+"""
+Defining autocorrelation function and autocorrelation times 
+using statsmodels library
 """
 def autocorrelation(data):
     N = len(data)
-    autocorr = acf(data,adjusted=False,fft=False, nlags=(N-1))
+    autocorr = acf(data,adjusted=True,fft=False, nlags=(N-1))
     return autocorr
 
 def autocorrelation_time(data):
@@ -73,12 +79,12 @@ def autocorrelation_time(data):
 
 def batch_estimate(data, operation, num_batches, batch_with_autocorr):
     if batch_with_autocorr == True:
-        t_f = autocorrelation_time(data)
-        print(t_f)
-        if t_f == 0:
+        t_a = autocorrelation_time(data)
+        print(t_a)
+        if t_a == 0:
             m = int(len(data)/2)
         else: 
-            m = int(len(data)/(2*t_f))
+            m = int(len(data)/(2*t_a))
 
     elif batch_with_autocorr == False:
         m = num_batches
@@ -97,19 +103,20 @@ def batch_estimate(data, operation, num_batches, batch_with_autocorr):
 
 #############################################################################
 
-"""Defining autocorrelation function and autocorrelation times
-   without statsmodels library
+"""
+Defining autocorrelation function and autocorrelation times
+without statsmodels library
 """
 
 def autocorrelation_2(data,t_max):
     """Computes ACF for a given time series"""
     size = len(data)
     mean = np.mean(data)
-
+    t_max = min((t_max,size))
     # autocovariance
     autocov = np.zeros(size)
-    for t in range(min(t_max,size)):
-        autocov[t] = np.dot(data[:size-t] - mean, data[t:] - mean) / (size)
+    for t in range(t_max):
+        autocov[t] = np.dot(data[:size-t] - mean, data[t:] - mean) / (size-t)
 
     #normalise
     autocorr = autocov/autocov[0]

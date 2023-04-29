@@ -35,6 +35,9 @@ for i in range(len(T)):
     M_pos_T[i] = Mag_pos(1/T[i])
     M_neg_T[i] = Mag_neg(1/T[i])
 
+temp_data = [T,M_pos_T]
+np.save('analytical_onsager_data_temp', temp_data)
+
 fig, ax = plt.subplots(1,2,figsize=(12,4))
 plt.suptitle("Onsager solution for mean magentisation in the limit of large lattice")
 ax[0].plot(T, M_pos_T, label=None, color='b')

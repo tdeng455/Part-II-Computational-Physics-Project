@@ -22,17 +22,14 @@ def equilibration_wolff(width, betaJ, n_steps, filename):
         magnetisations = [mag]
         for j in range(n_steps):
             cluster.wolff_flip1(lattice, p_add)
-            if j in np.arange(n_steps)*10:
+            if j in np.arange(n_steps)*5:
                 mag = np.abs(initial.magnetisation(lattice))
                 magnetisations.append(mag)
 
         magnetisation_data.append([name, magnetisations])
 
     np.save(filename, np.array(magnetisation_data, dtype=object))
-    #ax.set_xlabel("Number of Sweeps")
-    #ax.set_ylabel("Absolute Magnetisation, |M|")
-    #ax.set_title(r"Wolff Equilibration for $\beta$ = {}".format(betaJ))
-    #ax.legend()
 
+equilibration_wolff(40,0.44,1000, 'wolff_equilibration_data_0.44')
 equilibration_wolff(40,0.33,1000, 'wolff_equilibration_data_0.33')
-equilibration_wolff(40,1,1000, 'wolff_equilibration_data_1.00')
+equilibration_wolff(40,1.00,1000, 'wolff_equilibration_data_1.00')
