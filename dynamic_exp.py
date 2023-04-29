@@ -1,67 +1,79 @@
 """Calculate and plot dynamic exponent via finite size scaling"""
 
 import numpy as np
-rng = np.random.default_rng()
 import matplotlib.pylab as plt
 import functions.initial as initial
-import functions.metropolis as metropolis
-import functions.cluster as cluster
+from scipy.stats import linregress
+from acf3 import acf_magnetisation_steps as acf_series
 
-def compute_dynamic_exponent_MH(w_values, betaJ, burn_in, n_steps):
+def compute_dynamic_exponent_MH(w_values, ac_times, filename, generate_needed):
     
-    #Generate data
-    autotimes = []
-    for L in w_values:
-        mags=[]
-        lattice = initial.create_lattice(L,1)
-        metropolis.n_MH_moves(lattice, L, betaJ, burn_in)
-        for i in range(n_steps):
-            mags.append(initial.magnetisation(lattice))
-            metropolis.MH_flip(lattice, L, betaJ)
-            if i%100 == 0:
-                mags.append(initial.magnetisation(lattice))
-                print(i)
-        autotime_L = initial.autocorrelation_time(mags)
-        autotimes.append(autotime_L)
-    print(autotimes)
+    if generate_needed == True:
+        print('Generating data for widths = ', w_values)
+        beta = 0.4407
+        ACF_MH_averages = []
+        #metropolis
+        for w in w_values:
+            print('width = ', w)
+            acf1 = acf_series(w,beta,False)
+            acf2 = acf_series(w,beta,False)
+            acf3 = acf_series(w,beta,False)
+            acf4 = acf_series(w,beta,False)
+            acf5 = acf_series(w,beta,False)
 
+            print('Averaging ACFs...')
+            ACF_MH_averages.append(np.mean(([acf1,acf2,acf3,acf4,acf5]), axis=0))
+
+        np.save(filename, [ACF_MH_averages, w_values])
+
+        act_values = []
+        for i in range(len(ACF_MH_averages)):
+            t_a = initial.autocorrelation_time(ACF_MH_averages[i], True)
+            act_values.append(t_a)
+    else:
+        act_values = ac_times
+    
     log_w = np.log(w_values)
-    log_times = np.log(autotimes)
-    coeffs = np.polyfit(log_w, log_times, deg=1)
+    log_tau = np.log(act_values)
+    coeffs = linregress(log_w,log_tau)
+    z = coeffs.slope
+    c = coeffs.intercept
     
-    return log_w, log_times, coeffs
+    plt.figure()
+    plt.plot(log_w, log_tau, label='data')
+    plt.plot(log_w, c + z*log_w, label='fitted line, z = {0:.2f} $\pm$ {1:.2f}'.format(z, coeffs.stderr))
+    plt.legend()
+    plt.show()
 
-def compute_dynamic_exponent_wolff(w_values, betaJ, burn_in, n_steps):
-    p_add = 1-np.exp(-2*betaJ)
-    
-    #Generate data
-    autotimes = []
-    for L in w_values:
-        print(L)
-        mags=[]
-        lattice = initial.create_lattice(L,0)
-        cluster.n_wolff_moves(lattice, p_add, burn_in)
-        for i in range(n_steps):
-            mags.append(initial.magnetisation(lattice))
-            cluster.wolff_flip1(lattice, p_add)
-            if i%1000 == 0:
-                print(i)
-        autotime_L = initial.autocorrelation_time(mags)
-        autotimes.append(autotime_L)
-    print(autotimes)
+    return z, coeffs.stderr
 
-    log_w = np.log(w_values)
-    log_times = np.log(autotimes)
-    coeffs = np.polyfit(log_w, log_times, deg=1)
+"""
+beta = 0.44
+widths = [16,32,64,128,256,512]
+ACF_MH_averages = []
+#metropolis
+for w in widths:
+    print('width = ', w)
+    acf1 = acf_series(w,beta,False)
+    acf2 = acf_series(w,beta,False)
+    acf3 = acf_series(w,beta,False)
+    acf4 = acf_series(w,beta,False)
+    acf5 = acf_series(w,beta,False)
 
-    return log_w, log_times, coeffs
+    print('Averaging ACFs...')
+    ACF_MH_averages.append(np.mean(([acf1,acf2,acf3,acf4,acf5]), axis=0))
 
-log_w, log_times, coeffs = compute_dynamic_exponent_MH([10,20,30,40,50,60,70,100,150,200,500,1000],  0.440687, 50000, 100000)
+np.save('acf_data_widths',[ACF_MH_averages,widths])
 
-data = [log_w,log_times]
-np.save('log_width and log_times', data)
+ac_times = []
+for i in range(len(ACF_MH_averages)):
+    t_a = initial.autocorrelation_time(ACF_MH_averages[i], True)
+    ac_times.append(t_a)
 
-print(coeffs)
-plt.figure()
-plt.plot(log_w,log_times)
+for i in range(len(ACF_MH_averages)):
+    plt.plot(ACF_MH_averages[i], label=widths[i])
+plt.xlim(0,2*np.mean(ac_times))
+plt.legend()
+plt.yscale("log")
 plt.show()
+"""
