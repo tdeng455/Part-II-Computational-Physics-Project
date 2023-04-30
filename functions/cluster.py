@@ -1,5 +1,7 @@
-"""Defines wolff algorithm and other useful functions for wolff method, 
-   defines a different evolve_and_plot from initial for choice of both algorithms
+"""
+cluster.py
+Defines wolff algorithm and other useful functions for wolff method, 
+defines a different evolve_and_plot from initial for choice of both algorithms
 """
 
 import numpy as np
@@ -10,8 +12,9 @@ import functions.metropolis as metropolis
 from collections import deque
 
 def wolff_flip1(lattice, p_add):
-    """Grows the cluster flip by flip with parameter p_add so that it is not computed each step.
-       This avoids having to store the cluster.
+    """
+    Grows the cluster flip by flip with parameter p_add so that it is not 
+    computed each step. This avoids having to store the cluster.
     """
     seed = tuple(rng.integers(0,len(lattice),2))
     
@@ -36,13 +39,17 @@ def wolff_flip1(lattice, p_add):
     return c_size
 
 def n_wolff_moves(lattice, p_add, n):
+    """
+    Carries out `n` wolff moves
+    """
     total_flips = 0
     for i in range(n):
         total_flips += wolff_flip1(lattice,p_add)
     return total_flips
 
 def compute_M_avg_wolff(lattice, p_add, avg_times):
-    """Evolves the lattice using the Wolff algorithm and returns the average 
+    """
+    Evolves the lattice using the Wolff algorithm and returns the average 
     absolute magnetisation per site computed using different time steps.
     """
     m=[]
@@ -54,7 +61,10 @@ def compute_M_avg_wolff(lattice, p_add, avg_times):
     return m_avg
 
 def evolve_and_plot_wolff(lattice, p_add, plot_times):
-    """Evolves the lattice using MH or Wolff algorithm and plots the lattice at different 'time steps'."""
+    """
+    Evolves the lattice using MH or Wolff algorithm and plots the lattice
+    at different 'time steps'.
+    """
     fig, ax = plt.subplots(1, len(plot_times), figsize=(12,4))
 
     sweeps = 0
