@@ -1,7 +1,10 @@
 """
 initial.py
-Creates a lattice and defines useful functions such as calculating neighbouring sites, 
-calculating the sum of neighbouring spin sites and computes the total magnetisation of the lattice
+Creates a lattice and defines useful functions that calculate 
+neighbouring sites, the sum of neighbouring spin sites, the total 
+magnetisation of the lattice and plot the lattice. The autocorrelation 
+function and the finding the autocorrelation times have also been 
+defined with and without the 'statsmodels' library
 """
 
 import numpy as np
@@ -67,7 +70,12 @@ def magnetisation(lattice):
 Defining autocorrelation function and autocorrelation times 
 using 'statsmodels' library
 """
+
 def autocorrelation(data):
+    """
+    Returns the autocorrelation function of a data series, if a value
+    is found as nan when calculating acf, returns 0 for that entry
+    """
     N = len(data)
     autocorr = acf(data,adjusted=True,fft=False, nlags=(N-1))
     for i in range(len(autocorr)):
@@ -76,6 +84,13 @@ def autocorrelation(data):
     return autocorr
 
 def autocorrelation_time(data, data_type_is_autocorr=bool):
+    """
+    Returns the autocorrelation time for either a given data series
+    or for a given autocorrelation function
+
+    `data_type_is_autocorr = True` for an acf input
+    `data_type_is_autocorr = False` for another data series input
+    """
     if data_type_is_autocorr == False:
         autocorr = autocorrelation(data)
         if np.count_nonzero(autocorr) == 0:
@@ -94,6 +109,15 @@ def autocorrelation_time(data, data_type_is_autocorr=bool):
 
 
 def batch_estimate(data, operation, num_batches, batch_with_autocorr):
+    """
+    Calculates a batch estimate of a data series using the autocorrelation time
+    
+    `operation` parameter must be a function
+    
+    `batch_with_autocorr = True` uses the autocorrelation time to determine `num_batches`
+    
+    `batch_with_autocorr = False` uses `num_batches` whuch must be specified
+    """
     if batch_with_autocorr == True:
         t_a = autocorrelation_time(data)
         print(t_a)

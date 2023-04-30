@@ -1,4 +1,7 @@
-"""Defines Metropolis-Hastings algorithm"""
+"""
+metropolis.py
+Defines Metropolis-Hastings algorithm
+"""
 
 import functions.initial as initial
 import numpy as np
@@ -29,18 +32,6 @@ def MH_flip(lattice, width, betaJ):
 def n_MH_moves(lattice, width, betaJ, n):
     for i in range(n):
         MH_flip(lattice, width, betaJ)
-
-def compute_M_avg(lattice, width, betaJ, avg_times):
-    """Evolves the lattice using the Metropolis-Hastings algorithm and returns the average 
-    absolute magnetisation per site computed using different time steps.
-    """
-    m=[]
-    for t in range(avg_times[-1]+1):
-        MH_flip(lattice, width, betaJ)
-        if t in avg_times:
-            m.append(abs(initial.magnetisation(lattice)))
-    m_avg = np.mean(m)
-    return m_avg
 
 def evolve_and_plot_MH(lattice, width, betaJ, plot_times):
     """Evolves the lattice using MH algorithm and plots the lattice at different 'time steps'."""
