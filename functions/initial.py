@@ -9,6 +9,7 @@ rng = np.random.default_rng()
 import matplotlib.pylab as plt
 from statsmodels.tsa.stattools import acf
 import types
+import math
 
 def create_lattice(width,type=0):
     """
@@ -64,22 +65,31 @@ def magnetisation(lattice):
 
 """
 Defining autocorrelation function and autocorrelation times 
-using statsmodels library
+using 'statsmodels' library
 """
 def autocorrelation(data):
     N = len(data)
-    autocorr = acf(data,adjusted=True,fft=False, nlags= N-1)
+    autocorr = acf(data,adjusted=True,fft=False, nlags=(N-1))
+    for i in range(len(autocorr)):
+        if math.isnan(autocorr[i]) == True:
+            autocorr[i] = 0
     return autocorr
 
 def autocorrelation_time(data, data_type_is_autocorr=bool):
     if data_type_is_autocorr == False:
         autocorr = autocorrelation(data)
-        crit = np.exp(-1)
-        t_a = np.argmin(autocorr>crit, axis=0)
+        if np.count_nonzero(autocorr) == 0:
+            t_a = 0
+        else:
+            crit = np.exp(-1)
+            t_a = np.argmin(autocorr>crit, axis=0)
         return t_a
     else:
-        crit = np.exp(-1)
-        t_a = np.argmin(data<crit, axis=0)
+        if np.count_nonzero(data) == 0:
+            t_a = 0
+        else:
+            crit = np.exp(-1)
+            t_a = np.argmin(data<crit, axis=0)
         return t_a
 
 
@@ -111,7 +121,7 @@ def batch_estimate(data, operation, num_batches, batch_with_autocorr):
 
 """
 Defining autocorrelation function and autocorrelation times
-without statsmodels library
+without 'statsmodels' library
 """
 
 def autocorrelation_2(data,t_max):

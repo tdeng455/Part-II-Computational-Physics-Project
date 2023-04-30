@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pylab as plt
 import functions.initial as initial
 from scipy.stats import linregress
-from acf3 import acf_magnetisation_steps as acf_series
+import acf3 as acf_gen
 
 def compute_dynamic_exponent_MH(w_values, ac_times, filename, generate_needed):
     
@@ -15,11 +15,11 @@ def compute_dynamic_exponent_MH(w_values, ac_times, filename, generate_needed):
         #metropolis
         for w in w_values:
             print('width = ', w)
-            acf1 = acf_series(w,beta,False)
-            acf2 = acf_series(w,beta,False)
-            acf3 = acf_series(w,beta,False)
-            acf4 = acf_series(w,beta,False)
-            acf5 = acf_series(w,beta,False)
+            acf1 = acf_gen.acf_magnetisation_steps(w,beta,False)
+            acf2 = acf_gen.acf_magnetisation_steps(w,beta,False)
+            acf3 = acf_gen.acf_magnetisation_steps(w,beta,False)
+            acf4 = acf_gen.acf_magnetisation_steps(w,beta,False)
+            acf5 = acf_gen.acf_magnetisation_steps(w,beta,False)
 
             print('Averaging ACFs...')
             ACF_MH_averages.append(np.mean(([acf1,acf2,acf3,acf4,acf5]), axis=0))

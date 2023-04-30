@@ -5,9 +5,9 @@ import functions.initial as initial
 import functions.metropolis as metropolis
 import functions.cluster as cluster
 
-width = 16  # width of the lattice
+width = 40  # width of the lattice
 N = width**2
-n_sweeps = 100
+n_sweeps = 200
 betaJ = 0.441
 
 #------------Metropolis ACF-------------#
@@ -47,7 +47,7 @@ cluster_size = total_flips/1000
 
 mag_wolff = []
 sweeps_data_wolff = []
-wolff_n_steps = round(n_sweeps*N/cluster_size) # number of moves for wolff algorithm
+wolff_n_steps = 200 # number of moves for wolff algorithm
 wolff_burn_in = 2000 # equilibration time for wolff
 
 print('Equilibrating...')
