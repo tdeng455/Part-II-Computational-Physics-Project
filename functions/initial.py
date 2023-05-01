@@ -93,19 +93,14 @@ def autocorrelation_time(data, data_type_is_autocorr=bool):
     """
     if data_type_is_autocorr == False:
         autocorr = autocorrelation(data)
-        if np.count_nonzero(autocorr) == 0:
-            t_a = 0
-        else:
-            crit = np.exp(-1)
-            t_a = np.argmin(autocorr>crit, axis=0)
-        return t_a
+        crit = np.exp(-1)
+        t_a = np.argmin(autocorr>crit, axis=0)
+        return t_a if t_a>0 else len(autocorr)
+        
     else:
-        if np.count_nonzero(data) == 0:
-            t_a = 0
-        else:
-            crit = np.exp(-1)
-            t_a = np.argmin(data<crit, axis=0)
-        return t_a
+        crit = np.exp(-1)
+        t_a = np.argmin(data<crit, axis=0)
+        return t_a if t_a>0 else len(data)
 
 
 def batch_estimate(data, operation, num_batches, batch_with_autocorr):
