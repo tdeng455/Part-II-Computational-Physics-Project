@@ -97,7 +97,7 @@ def acf_magnetisation_sweeps(width, betaJ, n_steps, MH_burn_sweeps = 200,
         #------------Wolff ACF-------------#
 
         print('--------------Wolff case--------------')
-        
+        print('WIDTH = ',width)
         p_add = 1 - np.exp(-2*betaJ)
 
         #finding average cluster size --- not needed for current setup
@@ -132,8 +132,10 @@ def acf_magnetisation_sweeps(width, betaJ, n_steps, MH_burn_sweeps = 200,
         #ACF_wolff = initial.autocorrelation_2(mag_wolff, len(mag_wolff))
 
         return ACF_wolff, sweeps_data_wolff
+    
+#-------------------------SIMULATION-------------------------------------------
 
-
+"""
 #metropolis
 num_avg = 50
 MH_acfs = []
@@ -154,14 +156,15 @@ MH_sweeps_dev = np.std(MH_sweeps, axis=0)/np.sqrt(num_avg-1)
 np.save('MH_acf_256', [MH_acf_sweeps, MH_acf_averages, MH_acf_stdev])
 
 print('Done')
+"""
 
 #wolff
-num_avg = 30
+num_avg = 20
 wolff_acfs = []
 wolff_sweeps = []
 for i in range(num_avg):
     print('STAGE ',i)
-    acf_data, sweepdata = acf_magnetisation_sweeps(16,0.441,200, wolff=True)
+    acf_data, sweepdata = acf_magnetisation_sweeps(256,0.441,1000, wolff=True)
     print(len(acf_data))
     wolff_acfs.append(acf_data)
     wolff_sweeps.append(sweepdata)
@@ -172,16 +175,16 @@ wolff_acf_sweeps = np.mean(wolff_sweeps, axis=0)
 wolff_acf_averages = np.mean(wolff_acfs, axis=0)
 wolff_acf_stdev = np.std(wolff_acfs, axis=0)/np.sqrt(num_avg-1)
 
-np.save('wolff_acf_16', [wolff_acf_sweeps, wolff_acf_averages, wolff_acf_stdev])
+np.save('wolff_acf_256_2', [wolff_acf_sweeps, wolff_acf_averages, wolff_acf_stdev])
 
 print('Done')
 
-num_avg = 30
+num_avg = 20
 wolff_acfs = []
 wolff_sweeps = []
 for i in range(num_avg):
     print('STAGE ',i)
-    acf_data, sweepdata = acf_magnetisation_sweeps(32,0.441,200, wolff=True)
+    acf_data, sweepdata = acf_magnetisation_sweeps(128,0.441,1000, wolff=True)
     print(len(acf_data))
     wolff_acfs.append(acf_data)
     wolff_sweeps.append(sweepdata)
@@ -192,16 +195,16 @@ wolff_acf_sweeps = np.mean(wolff_sweeps, axis=0)
 wolff_acf_averages = np.mean(wolff_acfs, axis=0)
 wolff_acf_stdev = np.std(wolff_acfs, axis=0)/np.sqrt(num_avg-1)
 
-np.save('wolff_acf_32', [wolff_acf_sweeps, wolff_acf_averages, wolff_acf_stdev])
+np.save('wolff_acf_128_2', [wolff_acf_sweeps, wolff_acf_averages, wolff_acf_stdev])
 
 print('Done')
 
-num_avg = 30
+num_avg = 20
 wolff_acfs = []
 wolff_sweeps = []
 for i in range(num_avg):
     print('STAGE ',i)
-    acf_data, sweepdata = acf_magnetisation_sweeps(64,0.441,200, wolff=True)
+    acf_data, sweepdata = acf_magnetisation_sweeps(64,0.441,1000, wolff=True)
     print(len(acf_data))
     wolff_acfs.append(acf_data)
     wolff_sweeps.append(sweepdata)
@@ -212,16 +215,16 @@ wolff_acf_sweeps = np.mean(wolff_sweeps, axis=0)
 wolff_acf_averages = np.mean(wolff_acfs, axis=0)
 wolff_acf_stdev = np.std(wolff_acfs, axis=0)/np.sqrt(num_avg-1)
 
-np.save('wolff_acf_64', [wolff_acf_sweeps, wolff_acf_averages, wolff_acf_stdev])
+np.save('wolff_acf_64_2', [wolff_acf_sweeps, wolff_acf_averages, wolff_acf_stdev])
 
 print('Done')
 
-num_avg = 30
+num_avg = 20
 wolff_acfs = []
 wolff_sweeps = []
 for i in range(num_avg):
     print('STAGE ',i)
-    acf_data, sweepdata = acf_magnetisation_sweeps(128,0.441,200, wolff=True)
+    acf_data, sweepdata = acf_magnetisation_sweeps(32,0.441,1000, wolff=True)
     print(len(acf_data))
     wolff_acfs.append(acf_data)
     wolff_sweeps.append(sweepdata)
@@ -232,16 +235,16 @@ wolff_acf_sweeps = np.mean(wolff_sweeps, axis=0)
 wolff_acf_averages = np.mean(wolff_acfs, axis=0)
 wolff_acf_stdev = np.std(wolff_acfs, axis=0)/np.sqrt(num_avg-1)
 
-np.save('wolff_acf_128', [wolff_acf_sweeps, wolff_acf_averages, wolff_acf_stdev])
+np.save('wolff_acf_32_2', [wolff_acf_sweeps, wolff_acf_averages, wolff_acf_stdev])
 
 print('Done')
 
-num_avg = 30
+num_avg = 20
 wolff_acfs = []
 wolff_sweeps = []
 for i in range(num_avg):
     print('STAGE ',i)
-    acf_data, sweepdata = acf_magnetisation_sweeps(256,0.441,200, wolff=True)
+    acf_data, sweepdata = acf_magnetisation_sweeps(16,0.441,1000, wolff=True)
     print(len(acf_data))
     wolff_acfs.append(acf_data)
     wolff_sweeps.append(sweepdata)
@@ -252,7 +255,8 @@ wolff_acf_sweeps = np.mean(wolff_sweeps, axis=0)
 wolff_acf_averages = np.mean(wolff_acfs, axis=0)
 wolff_acf_stdev = np.std(wolff_acfs, axis=0)/np.sqrt(num_avg-1)
 
-np.save('wolff_acf_256', [wolff_acf_sweeps, wolff_acf_averages, wolff_acf_stdev])
+np.save('wolff_acf_16_2', [wolff_acf_sweeps, wolff_acf_averages, wolff_acf_stdev])
 
 print('Done')
+
 
