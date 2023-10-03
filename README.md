@@ -2,3 +2,5 @@
 # Computer Project
 
 Template repo for Part II computer projects
+
+see workbook.ipynb for the report
